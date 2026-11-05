@@ -67,7 +67,6 @@ uv run app.py            # http://127.0.0.1:8000
 
 Env vars: `MODEL_NAME` (Lead/Writer, default `vertex_ai/gemini-3.5-flash`), `RESEARCHER_MODEL_NAME` (default `vertex_ai/gemini-3.5-flash-lite`), `VERTEXAI_PROJECT` (if ADC has no default project).
 
-
 ## Three sample queries
 
 Each question has one answer computable from one table. **Expected** comes from the SQL shown; the agent answer and the no-tools answer come from `scripts/sample_queries.py`, which prints this whole section in markdown.
