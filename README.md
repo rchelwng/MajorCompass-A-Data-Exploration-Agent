@@ -67,13 +67,6 @@ uv run app.py            # http://127.0.0.1:8000
 
 Env vars: `MODEL_NAME` (Lead/Writer, default `vertex_ai/gemini-3.5-flash`), `RESEARCHER_MODEL_NAME` (default `vertex_ai/gemini-3.5-flash-lite`), `VERTEXAI_PROJECT` (if ADC has no default project).
 
-## Deploy to Cloud Run (continuous deploy from GitHub)
-
-1. Push this repo (with `data/majors.duckdb` committed; `data/raw/` is git-ignored).
-2. Cloud Run → Create service → *Continuously deploy from a repository* → pick the repo, build type **Dockerfile**.
-3. Settings: request timeout **300s** or more, **max instances 1** (chat history is stored in the container), memory 1 GiB, unauthenticated access allowed for graders.
-4. Give the service account the **Vertex AI User** role and set env var `VERTEXAI_PROJECT=<your project id>`.
-5. Put the service URL in `submission.json` and keep the service running until grades are released.
 
 ## Three sample queries
 
