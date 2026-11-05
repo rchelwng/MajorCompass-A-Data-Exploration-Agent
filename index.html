@@ -156,6 +156,9 @@
   [data-theme="dark"] body::after { background-image: radial-gradient(rgba(255,255,255,.13) 1px, transparent 1.3px); }
   [data-theme="dark"] body::before { opacity: .75; }
 
+  /* keep the injected agent timeline readable in both themes */
+  #context-panel { --bg:#f5f6fb; --card:#fff; --ink:#14182b; --mute:#5b6177; --line:#e3e6f0; --brand:#3b3fd8; --brand-soft:#eceefe; background: #fff; color: #14182b; color-scheme: light; }
+
   /* charts */
   .bars { margin: .9rem 0; display: grid; gap: .4rem; animation: fadein .5s ease both; }
   .bars h4 { font-size: .78rem; color: var(--mute); font-weight: 600; margin-bottom: .1rem; }
