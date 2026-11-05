@@ -62,7 +62,7 @@ uv run --group build build_data.py       # ~10-20 min, mostly the 575 MB PUMS do
 
 ```bash
 gcloud auth application-default login
-uv run app.py            # http://127.0.0.1:8000
+uv run app.py
 ```
 
 Env vars: `MODEL_NAME` (Lead/Writer, default `vertex_ai/gemini-3.5-flash`), `RESEARCHER_MODEL_NAME` (default `vertex_ai/gemini-3.5-flash-lite`), `VERTEXAI_PROJECT` (if ADC has no default project).
