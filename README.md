@@ -1,6 +1,6 @@
 # Major Decision Assistant
 
-_Structure inspired by the course's `wikipedia-deep-research` template: Lead fan-out, Researchers as numbered fresh-context runs, a Writer outside the loop, and the context panel. Data tools, evidence ledger, citation check, clarification step and the `/chat` contract are our own._
+Lead fan-out, Researchers as numbered fresh-context runs, a Writer outside the loop, and the context panel. Data tools, evidence ledger, citation check, clarification step and the `/chat` contract are our own._
 
 A **Deep Research** agent that tests whether college majors deliver the earnings and jobs students expect, and helps a student build a data-backed shortlist of majors.
 
