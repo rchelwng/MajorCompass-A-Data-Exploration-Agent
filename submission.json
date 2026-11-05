@@ -1,5 +1,5 @@
 {
-  "deploy_url": "https://REPLACE-WITH-YOUR-SERVICE-URL.run.app",
-  "authors": ["REPLACE_UNI_1", "REPLACE_UNI_2"],
+  "deploy_url": "https://majorcompass.cloud.run/",
+  "authors": ["rw3024", "mcr2235"],
   "path": "research"
 }
