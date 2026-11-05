@@ -1,0 +1,5 @@
+{
+  "deploy_url": "https://REPLACE-WITH-YOUR-SERVICE-URL.run.app",
+  "authors": ["REPLACE_UNI_1", "REPLACE_UNI_2"],
+  "path": "research"
+}
