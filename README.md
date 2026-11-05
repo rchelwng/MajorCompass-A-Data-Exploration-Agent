@@ -4,7 +4,7 @@ A **Deep Research** agent that tests whether college majors deliver the earnings
 
 **Target user:** high-school and college students (and their families or advisors) choosing a major, who want evidence instead of folklore. US, bachelor's degrees.
 
-**Live demo:** see `submission.json` (`[https://majorcompass.cloud.run/](https://majorcompass.cloud.run/)`). **Path:** `research`.
+**Live demo:** see `submission.json` ([https://majorcompass.cloud.run/](https://majorcompass.cloud.run/)). **Path:** `research`.
 
 ## What it does
 
