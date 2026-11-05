@@ -156,8 +156,16 @@
   [data-theme="dark"] body::after { background-image: radial-gradient(rgba(255,255,255,.13) 1px, transparent 1.3px); }
   [data-theme="dark"] body::before { opacity: .75; }
 
-  /* keep the injected agent timeline readable in both themes */
-  #context-panel { --bg:#f5f6fb; --card:#fff; --ink:#14182b; --mute:#5b6177; --line:#e3e6f0; --brand:#3b3fd8; --brand-soft:#eceefe; background: #fff; color: #14182b; color-scheme: light; }
+  /* agent timeline: the script hardcodes a light panel, so give dark mode its own colors */
+  #context-panel { color: #14182b; }
+  :root[data-theme="dark"] #context-panel { background: #12142a; border-left-color: #2a2e4a; color: #eceefb; }
+  :root[data-theme="dark"] .ctx-head { background: #12142a; }
+  :root[data-theme="dark"] .ctx-head.active { color: #fff; border-top-color: #fff; }
+  :root[data-theme="dark"] .ctx-wait, :root[data-theme="dark"] .ctx-note.divider { border-color: #3a3f66; }
+  :root[data-theme="dark"] .context-msg.thinking { color: #8a90ad; }
+  :root[data-theme="dark"] .context-msg summary { color: #aab0cc; }
+  :root[data-theme="dark"] .context-msg.new { animation-name: ctx-flash-dark; }
+  @keyframes ctx-flash-dark { from { background: #3a3012; } }
 
   /* charts */
   .bars { margin: .9rem 0; display: grid; gap: .4rem; animation: fadein .5s ease both; }
