@@ -232,14 +232,14 @@
       <div>
         <span class="eyebrow rise" style="--d:0">Majors, earnings and jobs</span>
         <h1 class="rise" style="--d:100">Does your major <em>actually pay off?</em></h1>
-        <p class="lede rise" style="--d:220">Ask about any college major. A team of research agents queries real US earnings and employment data in parallel, then writes a short answer where every number is cited.</p>
+        <p class="lede rise" style="--d:220">Ask about any college major. A team of research agents queries real US earnings, employment and graduate-survey data in parallel, then writes a short answer where every number is cited.</p>
         <div class="sources rise" style="--d:320" aria-label="Data sources">
-          <span><b>Census ACS</b> 2024 microdata</span><span><b>BLS</b> projections 2025–35</span><span><b>College Scorecard</b> field-of-study</span><span><b>FRED</b> unemployment by education</span>
+          <span><b>Census ACS</b> 2024 microdata</span><span><b>BLS</b> projections 2025–35</span><span><b>College Scorecard</b> field-of-study</span><span><b>FRED</b> unemployment by education</span><span><b>NSF graduate survey</b> 2023: job satisfaction, working in your field</span>
         </div>
       </div>
     </div>
     <div class="about rise" style="--d:420">
-      <div><h2>What it explores</h2>Pay, gender gaps, unemployment, earnings growth after graduation and typical jobs for bachelor's majors.</div>
+      <div><h2>What it explores</h2>Pay, gender gaps, unemployment, earnings growth after graduation and typical jobs for bachelor's majors, plus what graduates themselves report: whether they work in their field and how satisfied they are with their job.</div>
       <div><h2>Who it's for</h2>Students, families and advisors who want evidence, not folklore, before choosing a major. US data.</div>
       <div><h2>How to use it</h2>Ask a specific question, or tell it your priorities. Vague questions get a clarifying question first.</div>
     </div>
@@ -278,6 +278,8 @@ const EXAMPLES = [
   ["Gender gaps", "Which majors have the biggest gender gaps in earnings?"],
   ["Risk vs. reward", "Which majors have high earnings but relatively high unemployment?"],
   ["Five years out", "How do earnings change five years after graduation for the top-paying majors?"],
+  ["In your field?", "Which majors' graduates most often end up in jobs unrelated to their degree, and why do they leave?"],
+  ["Pay vs. satisfaction", "Do the highest-paying majors also have the most satisfied graduates?"],
   ["Decision mode", "I want to earn $80k+ by my late 20s with low unemployment risk. Which majors should I look at?", true],
 ];
 for (const [label, q, wide] of EXAMPLES) {

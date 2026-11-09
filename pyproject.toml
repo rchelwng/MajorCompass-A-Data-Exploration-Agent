@@ -1,7 +1,7 @@
 [project]
 name = "major-decision-assistant"
 version = "0.1.0"
-description = "A deep-research agent (Lead, parallel Researchers, Writer) that checks whether college majors deliver the earnings and jobs students expect, using ACS, College Scorecard, FRED and BLS data"
+description = "A deep-research agent (Lead, parallel Researchers, Writer) that checks whether college majors deliver the earnings and jobs students expect, using ACS, College Scorecard, FRED, BLS and NSF graduate-survey (NSCG) data"
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.109.0",

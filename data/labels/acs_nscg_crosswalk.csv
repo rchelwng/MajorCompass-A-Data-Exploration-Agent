@@ -1,0 +1,175 @@
+acs_code,acs_major,nscg_code,nscg_field,match_quality
+1100,General Agriculture,216080,"Agricultural, animal, plant, veterinary science and related fields, other",loose
+1101,Agriculture Production And Management,716020,"Agribusiness, agricultural business operations",close
+1102,Agricultural Economics,416010,Agricultural economics,same
+1103,Animal Sciences,216050,Animal sciences,same
+1104,Food Science,216060,Food sciences and technology,same
+1105,Plant Science And Agronomy,216070,Plant sciences,same
+1106,Soil Science,216080,"Agricultural, animal, plant, veterinary science and related fields, other",loose
+1107,Veterinary Medicine,216080,"Agricultural, animal, plant, veterinary science and related fields, other",loose
+1199,Miscellaneous Agriculture,216080,"Agricultural, animal, plant, veterinary science and related fields, other",close
+1301,Environmental Science,236800,Environmental science or studies,same
+1302,Forestry,236810,Forestry sciences,same
+1303,Natural Resources Management,766820,Other conservation and natural resources,close
+1401,Architecture,646100,Architecture/ environmental design,same
+1501,Area Ethnic And Civilization Studies,456200,Area and ethnic studies,same
+1901,Communications,766610,"Communications, general",same
+1902,Journalism,766620,Journalism,same
+1903,Mass Media,766630,Other communication,close
+1904,Advertising And Public Relations,766630,Other communication,loose
+2001,Communication Technologies,766630,Other communication,loose
+2100,Computer And Information Systems,116710,"Computer and information sciences, general",close
+2101,Computer Programming And Data Processing,636720,Computer programming,close
+2102,Computer Science,116730,Computer science,same
+2105,Information Sciences,116760,"Information science, studies",same
+2106,Computer Administration Management And Security,116770,Other computer and information sciences,loose
+2107,Computer Networking And Telecommunications,116770,Other computer and information sciences,loose
+2201,Cosmetology Services And Culinary Arts,,,
+2300,General Education,727130,Other education,loose
+2301,Educational Administration And Supervision,727010,Education administration and supervision,same
+2303,School Student Counseling,727030,Counselor education/ school counseling and guidance services,same
+2304,Elementary Education,727050,Elementary education and teaching,same
+2305,Mathematics Teacher Education,627060,Mathematics teacher education,same
+2306,Physical And Health Education Teaching,727070,Physical education teaching and coaching,same
+2307,Early Childhood Education,727080,Pre-school/ kindergarten/ early childhood teacher education,same
+2308,Science And Computer Teacher Education,627090,"Science teacher education, general science teacher education (includes biology, chemistry, earth science, physics, etc.)",close
+2309,Secondary Teacher Education,727100,Secondary teacher education,same
+2310,Special Needs Education,727110,Special education and teaching,same
+2311,Social Science Or History Teacher Education,627120,"Social science teacher education, including psychology teacher education",close
+2312,Teacher Education: Multiple Levels,727130,Other education,loose
+2313,Language And Drama Education,727130,Other education,loose
+2314,Art And Music Education,727130,Other education,loose
+2399,Miscellaneous Education,727130,Other education,close
+2400,General Engineering,577310,"Engineering, general",same
+2401,Aerospace Engineering,517210,"Aerospace, aeronautical, and astronautical/ space engineering",same
+2402,Biological Engineering,577220,Agricultural engineering,close
+2403,Architectural Engineering,537230,Architectural engineering,same
+2404,Biomedical Engineering,577240,Bioengineering and biomedical engineering,same
+2405,Chemical Engineering,527250,Chemical engineering,same
+2406,Civil Engineering,537260,Civil engineering,same
+2407,Computer Engineering,547270,Computer engineering and systems engineering,same
+2408,Electrical Engineering,547280,"Electrical, electronics, and communications engineering",same
+2409,Engineering Mechanics Physics And Science,577290,"Engineering sciences, mechanics and physics",same
+2410,Environmental Engineering,577300,"Environmental, environmental health engineering",same
+2411,Geological And Geophysical Engineering,577410,"Other engineering, including geophysical, geological, mining and mineral",close
+2412,Industrial And Manufacturing Engineering,557330,Industrial and manufacturing engineering,same
+2413,Materials Engineering And Materials Science,577340,"Materials engineering, including ceramics and textiles",same
+2414,Mechanical Engineering,567350,Mechanical engineering,same
+2415,Metallurgical Engineering,577360,Metallurgical engineering,same
+2416,Mining And Mineral Engineering,577410,"Other engineering, including geophysical, geological, mining and mineral",close
+2417,Naval Architecture And Marine Engineering,577380,Naval architecture and marine engineering,same
+2418,Nuclear Engineering,577390,Nuclear engineering,same
+2419,Petroleum Engineering,577400,Petroleum engineering,same
+2499,Miscellaneous Engineering,577410,"Other engineering, including geophysical, geological, mining and mineral",close
+2500,Engineering Technologies,637540,Other engineering-related technologies,close
+2501,Engineering And Industrial Management,637540,Other engineering-related technologies,loose
+2502,Electrical Engineering Technology,637510,Electrical and electronic technologies,same
+2503,Industrial Production Technologies,637520,Industrial production technologies,same
+2504,Mechanical Engineering Related Technologies,637530,Mechanical engineering-related technologies,same
+2599,Miscellaneous Engineering Technologies,637540,Other engineering-related technologies,same
+2601,Linguistics And Comparative Language And Literature,457710,Linguistics,close
+2602,French German Latin And Other Common Foreign Language Studies,757720,Other foreign languages and literature,close
+2603,Other Foreign Languages,757720,Other foreign languages and literature,same
+2901,Family And Consumer Sciences,768000,"Family, consumer sciences and human sciences",same
+3202,Pre-Law And Legal Studies,768100,Legal professions and studies,same
+3301,English Language And Literature,757600,"English language, literature and letters",same
+3302,Composition And Rhetoric,757600,"English language, literature and letters",close
+3401,Liberal Arts,758200,Liberal arts and sciences,same
+3402,Humanities,758200,Liberal arts and sciences,close
+3501,Library Science,768300,Library science,same
+3600,Biology,226320,"Biology, general",same
+3601,Biochemical Sciences,226310,Biochemistry and biophysics,same
+3602,Botany,226330,Botany and plant biology,same
+3603,Molecular Biology,226340,Cell and molecular biology,same
+3604,Ecology,226350,Ecology,same
+3605,Genetics,226360,"Genetics, animal and plant",same
+3606,Microbiology,226370,Microbiological sciences and immunology,same
+3607,Pharmacology,226390,"Pharmacology, human and animal",same
+3608,Physiology,226400,"Physiology, pathology, and related sciences (human and animal)",same
+3609,Zoology,226410,"Zoology, animal biology",same
+3611,Neuroscience,226420,Other biological sciences,loose
+3699,Miscellaneous Biology,226420,Other biological sciences,same
+3700,Mathematics,128420,"Mathematics, general",same
+3701,Applied Mathematics,128410,Applied mathematics,same
+3702,Statistics And Decision Science,128440,Statistics,same
+3801,Military Technologies,,,
+4000,Multi/Interdisciplinary Studies,,,
+4001,Intercultural And International Studies,429270,International relations and national security studies,loose
+4002,Nutrition Sciences,226380,Nutrition sciences,same
+4005,Mathematics And Computer Science,128450,Other mathematics,loose
+4006,Cognitive Science And Biopsychology,438970,Other psychology,loose
+4007,Interdisciplinary Social Sciences,459300,Other social sciences,close
+4009,Data Science and Data Analytics,,,
+4101,Physical Fitness Parks Recreation And Leisure,768500,"Parks, recreation, leisure, fitness, and kinesiology",same
+4801,Philosophy And Religious Studies,738620,"Philosophy, religion, theology",same
+4901,Theology And Religious Vocations,738620,"Philosophy, religion, theology",close
+5000,Physical Sciences,348790,Other physical sciences,close
+5001,Astronomy And Astrophysics,338710,Astronomy and astrophysics,same
+5002,Atmospheric Sciences And Meteorology,328720,Atmospheric sciences and meteorology,same
+5003,Chemistry,318730,"Chemistry, except biochemistry",same
+5004,Geology And Earth Science,328740,"Geological and earth sciences, geosciences",same
+5005,Geosciences,328740,"Geological and earth sciences, geosciences",close
+5006,Oceanography,328760,"Geological and earth sciences, other including ocean and marine sciences",same
+5007,Physics,338780,"Physics, except biophysics",same
+5008,Materials Science,577340,"Materials engineering, including ceramics and textiles",close
+5098,Multi-Disciplinary Or General Science,,,
+5102,"Nuclear, Industrial Radiology, And Biological Technologies",,,
+5200,Psychology,438940,General psychology,same
+5201,Educational Psychology,437040,Educational psychology,same
+5202,Clinical Psychology,438910,Clinical psychology,same
+5203,Counseling Psychology,438920,Counseling psychology,same
+5205,Industrial And Organizational Psychology,438950,Industrial/ organizational psychology,same
+5206,Social Psychology,438960,Social psychology,same
+5299,Miscellaneous Psychology,438970,Other psychology,same
+5301,Criminal Justice And Fire Protection,766900,Criminal justice and corrections,same
+5401,Public Administration,769010,Public administration,same
+5402,Public Policy,429020,Public policy analysis,same
+5403,Human Services And Community Organization,739100,Social work,loose
+5404,Social Work,739100,Social work,same
+5500,General Social Sciences,459300,Other social sciences,close
+5501,Economics,419230,Economics,same
+5502,Anthropology And Archeology,449210,Anthropology and archaeology,same
+5503,Criminology,449220,Criminology,same
+5504,Geography,459240,Geography,same
+5505,International Relations,429270,International relations and national security studies,same
+5506,Political Science And Government,429280,Political science and government,same
+5507,Sociology,449290,Sociology,same
+5599,Miscellaneous Social Sciences,459300,Other social sciences,same
+5601,Construction Services,,,
+5701,"Electrical, Mechanical, And Precision Technologies And Production",,,
+5901,Transportation Sciences And Technologies,,,
+6000,Fine Arts,759420,Fine and studio arts (all fields),same
+6001,Drama And Theater Arts,759410,"Drama, theatre arts, and stagecraft",same
+6002,Music,759430,"Music, all fields",same
+6003,Visual And Performing Arts,759440,Other visual and performing arts,close
+6004,Commercial Art And Graphic Design,759440,Other visual and performing arts,loose
+6005,Film Video And Photographic Arts,759440,Other visual and performing arts,loose
+6006,Art History And Criticism,759440,Other visual and performing arts,loose
+6007,Studio Arts,759420,Fine and studio arts (all fields),same
+6099,Miscellaneous Fine Arts,759440,Other visual and performing arts,same
+6100,General Medical And Health Services,617910,Other health/ medical sciences,close
+6102,Communication Disorders Sciences And Services,617810,Audiology and speech pathology,same
+6103,Health And Medical Administrative Services,617820,Health services administration,same
+6104,Medical Assisting Services,617830,Health/ medical assistants,same
+6105,Medical Technologies Technicians,617840,Health/ medical technologies,same
+6106,Health And Medical Preparatory Programs,617850,"Medical preparatory programs (e.g., pre-dentistry, pre-medical, pre-veterinary)",same
+6107,Nursing,617870,"Registered nursing, nursing administration, nursing research and clinical nursing",same
+6108,Pharmacy Pharmaceutical Sciences And Administration,617880,Pharmacy,same
+6109,Treatment Therapy Professions,617890,Physical therapy and other rehabilitation/ therapeutic services,same
+6110,Community And Public Health,617900,Public health (including environmental health and epidemiology),same
+6199,Miscellaneous Health Medical Professions,617910,Other health/ medical sciences,same
+6200,General Business,716540,"Business, commerce, general",same
+6201,Accounting,716510,Accounting,same
+6202,Actuarial Science,646520,Actuarial science,same
+6203,Business Management And Administration,716530,Business administration and management,same
+6204,Operations Logistics And E-Commerce,716590,Other business management/ administrative services,loose
+6205,Business Economics,716550,Business and managerial economics,same
+6206,Marketing And Marketing Research,746560,Business marketing/ marketing management,same
+6207,Finance,716570,Financial management,same
+6209,Human Resources And Personnel Management,716590,Other business management/ administrative services,loose
+6210,International Business,716590,Other business management/ administrative services,loose
+6211,Hospitality Management,716590,Other business management/ administrative services,loose
+6212,Management Information Systems And Statistics,,,
+6299,Miscellaneous Business and Medical Administration,716590,Other business management/ administrative services,close
+6402,History,759260,History,same
+6403,United States History,759260,History,close

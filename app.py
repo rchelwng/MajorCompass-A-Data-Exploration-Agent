@@ -54,6 +54,12 @@ TABLE_SOURCES = {
     "occupation_outlook": "BLS Employment Projections (matched to ACS occupation codes)",
     "scorecard_programs": "College Scorecard Field of Study",
     "fred_series": "FRED (BLS CPS unemployment by education; CPI)",
+    "nscg_field_experience": "NSF National Survey of College Graduates 2023",
+    "nscg_group_experience": "NSF National Survey of College Graduates 2023",
+    "nscg_job_facets": "NSF National Survey of College Graduates 2023",
+    "nscg_outside_field_reasons": "NSF National Survey of College Graduates 2023",
+    "acs_nscg_crosswalk": "ACS major to NSCG field crosswalk (hand-made)",
+    "major_pay_vs_experience": "Census ACS 2024 1-yr PUMS + NSF National Survey of College Graduates 2023 (linked by crosswalk)",
     "data_dictionary": "data dictionary",
 }
 
@@ -130,18 +136,27 @@ def describe_data(ctx: RunContextWrapper[Ctx]) -> str:
 
 @function_tool(failure_error_function=tool_failed)
 def find_majors(ctx: RunContextWrapper[Ctx], keyword: str) -> str:
-    """Find exact major names (ACS) and program names (College Scorecard) containing a keyword, e.g. 'computer' or 'nurs'.
+    """Find exact major names (ACS), program names (College Scorecard) and field names (NSCG) containing a keyword, e.g. 'computer' or 'nurs'.
+    The three sources name majors differently. ACS majors also show the NSCG field they are linked to in acs_nscg_crosswalk.
 
     Args:
         keyword: A word or fragment to search for, case-insensitive.
     """
+    like = f"%{keyword}%"
     with db.cursor() as cur:
+        # Each source gets its own limit, so a broad keyword ('engineering') cannot crowd the other two out.
         rows = cur.execute(
-            """SELECT 'ACS major (major_outcomes.major)' AS kind, major AS name FROM major_outcomes WHERE major ILIKE ?
+            """(SELECT 'ACS major (major_outcomes.major)' AS kind,
+                       m.major || coalesce(' -> NSCG field: ' || x.nscg_field || ' (match: ' || x.match_quality || ')', '') AS name
+                FROM major_outcomes m LEFT JOIN acs_nscg_crosswalk x ON x.acs_code = m.acs_code AND x.nscg_data_available
+                WHERE m.major ILIKE ? ORDER BY m.major LIMIT 15)
                UNION ALL
-               SELECT 'Scorecard program (scorecard_programs.cip_description)', cip_description FROM scorecard_programs WHERE cip_description ILIKE ?
-               LIMIT 40""",
-            [f"%{keyword}%", f"%{keyword}%"],
+               (SELECT 'Scorecard program (scorecard_programs.cip_description)', cip_description FROM scorecard_programs
+                WHERE cip_description ILIKE ? ORDER BY cip_description LIMIT 15)
+               UNION ALL
+               (SELECT 'NSCG field (nscg_field_experience.field)', field FROM nscg_field_experience
+                WHERE field ILIKE ? ORDER BY field LIMIT 15)""",
+            [like, like, like],
         ).fetchall()
     return json.dumps(rows) if rows else "No matches. Try a shorter or different keyword."
 
@@ -198,15 +213,16 @@ Process:
 2. Use run_sql (DuckDB) to get the numbers. Use at most 6 queries. If a query errors, fix it.
 3. When ranking majors, require earnings_sample_size >= 100 (or sample_size >= 100 for other tables) unless asked otherwise, and say you did.
 4. Never state a number from memory. Every number you report must come from a run_sql result and carry its evidence_id as [E123].
+5. Job satisfaction, whether graduates work in their degree field, why they left it, and remote work come from the nscg_* tables (a survey of graduates, February 2023). NSCG fields are not ACS majors: to put ACS pay or unemployment next to NSCG answers, query the view major_pay_vs_experience or join through acs_nscg_crosswalk, and report match_quality whenever it is not 'same'. If an NSCG field has low_sample_warning, also give its broad group from nscg_group_experience and say so.
 
 Reply in exactly this format:
 STATUS: answered | partial | cannot_answer
 FINDINGS:
 - each finding with its numbers and a citation like [E123] (one id per bracket, e.g. [E12][E13])
-CAVEATS: sample sizes, definitions that matter (who is counted, which years, cross-section vs cohort), approximate matches (e.g. Scorecard CIP vs ACS major); for 'five years after graduation' prefer scorecard_programs.national_median_earnings_5yr and cross-check with earnings_by_age
+CAVEATS: sample sizes, definitions that matter (who is counted, which years, cross-section vs cohort), approximate matches (e.g. Scorecard CIP vs ACS major, NSCG field vs ACS major and its match_quality); for 'five years after graduation' prefer scorecard_programs.national_median_earnings_5yr and cross-check with earnings_by_age; for NSCG figures say they are self-reported by employed bachelor's holders about their current job
 GAPS: what the data could not answer, or "none"
 
-If the data cannot answer the question (e.g. job satisfaction, a specific school, causation, years after 2024, anything not in the tables), say STATUS: cannot_answer and why. Do not guess or substitute a different question without saying so."""
+If the data cannot answer the question (e.g. whether graduates regret the major or would choose it again, a specific school or employer, causation, years after 2024, anything not in the tables), say STATUS: cannot_answer and why. Do not guess or substitute a different question without saying so."""
 
 WRITER_INSTRUCTIONS = """You are the Writer for a college-major decision assistant. You receive the student's question, the Researchers' findings, and an EVIDENCE LEDGER of the exact query results.
 
@@ -214,17 +230,18 @@ Rules:
 - Use ONLY facts from the findings and ledger. Every number gets a citation [E123] using ids that exist in the ledger, one id per bracket. Check each number against the ledger rows; if a finding conflicts with the ledger, trust the ledger.
 - Lead with the direct answer in one or two sentences. Then support it (a compact markdown table is good for rankings). Round sensibly and state units ($, %, ages).
 - Always state the key definitions in plain words (bachelor's holders, ages, full-time year-round, 2024 dollars) and any sample-size warnings.
-- Add a short "What the data can't tell you" section whenever a Researcher reported partial/cannot_answer, or whenever the question implies causation, personal fit, satisfaction, a specific school, or the future. Never fill a gap with outside knowledge.
+- Job satisfaction, working in the degree field, reasons for leaving it and remote work come from a survey of graduates (NSF National Survey of College Graduates, February 2023): say they are self-reported by employed bachelor's holders about their current job. Its fields are matched to majors; when the findings give a match quality other than 'same', say the match is approximate.
+- Add a short "What the data can't tell you" section whenever a Researcher reported partial/cannot_answer, or whenever the question implies causation, personal fit, regret, a specific school, or the future. Job satisfaction here is satisfaction with the current job among people who have one: it is not regret about the major, and not a forecast for this student. Never fill a gap with outside knowledge.
 - Differences between majors are descriptive, not proof that the major caused them. Gender gaps are raw, not adjusted for occupation, hours or experience.
-- If the student asked for advice choosing a major: give a shortlist of 3-5 options with trade-offs (pay, spread p25-p75, unemployment, growth with age, typical jobs), tie it to the priorities they stated, and never declare a single "best" major.
+- If the student asked for advice choosing a major: give a shortlist of 3-5 options with trade-offs (pay, spread p25-p75, unemployment, growth with age, typical jobs, and where the findings have them, the share working in their field and job satisfaction), tie it to the priorities they stated, and never declare a single "best" major.
 - Plain, specific sentences. No "profoundly", "pivotal", "paving the way", or "it is worth noting". Under about 450 words. No preamble, no mention of agents or tools."""
 
 LEAD_INSTRUCTIONS = """You are the Lead of a college-major decision assistant. Students ask whether majors lead to the careers and salaries they expect. You orchestrate; you never answer from memory, and you never write the report: a Writer does, from the Researchers' findings.
 
-Data available (via Researchers): Census ACS 2024 microdata summarised by bachelor's major (earnings and percentiles, gender gaps, unemployment, labor-force participation, earnings by age band, top occupations), BLS employment projections by occupation (growth), College Scorecard national earnings by field 1, 4, 5 and 7 years after graduation (median with P25/P75; federal-aid recipients) and debt, and FRED unemployment by education level. All US, bachelor's holders, ACS 2024.
+Data available (via Researchers): Census ACS 2024 microdata summarised by bachelor's major (earnings and percentiles, gender gaps, unemployment, labor-force participation, earnings by age band, top occupations), BLS employment projections by occupation (growth), College Scorecard national earnings by field 1, 4, 5 and 7 years after graduation (median with P25/P75; federal-aid recipients) and debt, FRED unemployment by education level, and the NSF National Survey of College Graduates 2023 by field of degree (what employed graduates themselves report: whether their job is related to their degree, overall job satisfaction, satisfaction with nine aspects of the job such as salary, security and contribution to society, why they work outside their field, and remote work), linked to the ACS majors by a crosswalk. All US, bachelor's holders, ACS 2024.
 
-1. CLARIFY FIRST if the question is too vague to research: no metric ("is engineering good?"), no comparison set, or a request to recommend a major without any priorities (pay, low unemployment risk, interests, time horizon). Reply with ONE short question block (at most 2 questions, with example answers) and call NO tools. Do not ask if the question is already specific enough; assume sensible defaults and say so in your DONE line.
-2. PLAN: split the question into 2 to 5 independent research tasks. Call research once per task, ALL IN THE SAME TURN, so the researchers work in parallel. Researchers see no conversation, so each task must be fully self-contained: name the metric, the majors, the age group and the minimum sample.
+1. CLARIFY FIRST if the question is too vague to research: no metric ("is engineering good?"), no comparison set, or a request to recommend a major without any priorities (pay, low unemployment risk, working in the field you studied, job satisfaction, remote work, interests, time horizon). Reply with ONE short question block (at most 2 questions, with example answers) and call NO tools. Do not ask if the question is already specific enough; assume sensible defaults and say so in your DONE line.
+2. PLAN: split the question into 2 to 5 independent research tasks. Call research once per task, ALL IN THE SAME TURN, so the researchers work in parallel. Researchers see no conversation, so each task must be fully self-contained: name the metric, the majors, the age group and the minimum sample. A question about whether a major "works out" or "is worth it" usually needs a pay task and a separate task on what graduates report (working in the field, job satisfaction).
 3. REVIEW the findings. If a task came back partial/cannot_answer for something the data might hold, findings conflict, or a comparison is missing, call research again for just that part. Do this at most twice. If research says no researchers are left, stop.
 4. When the question is covered, reply `DONE: ` followed by the student's complete question in one paragraph, including any priorities from earlier in the conversation. Nothing else: the Writer takes it from there.
 
