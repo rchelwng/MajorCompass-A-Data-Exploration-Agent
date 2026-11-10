@@ -4,7 +4,7 @@ A **deep-research agent** that checks whether college majors deliver the pay and
 
 - **Path:** Deep Research (`"path": "research"` in `submission.json`). SQL is one of the Researchers' tools; this is not a Text2SQL or evals project.
 - **Live site:** <https://majorcompass.cloud.run/>
-- **Team:** <UNI 1>, <UNI 2>
+- **Team:** <rw3024>, <mcr2235>
 
 **Target users:** students, families and academic advisors choosing a major who want evidence (earnings, unemployment, whether graduates end up working in their field, how satisfied they are) instead of folklore. It can also build a shortlist from stated priorities, but it never declares a single "best" major.
 
