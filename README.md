@@ -2,7 +2,7 @@
 
 A deep-research agent (Lead, parallel Researchers, Writer) that checks whether college majors deliver the pay and jobs students expect. US, bachelor's degrees.
 
-**Target user:** students, families and advisors choosing a major.
+**Target user(s):** students, families and academic advisors choosing a major.
 
 ## Data
 
