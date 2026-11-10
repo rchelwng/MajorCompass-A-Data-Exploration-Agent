@@ -3,7 +3,7 @@
 A **deep-research agent** that checks whether college majors deliver the pay and jobs students expect. A Lead plans the question, several Researchers query the data in parallel, and a Writer produces a short answer in which every number is cited. US, bachelor's degrees.
 
 - **Path:** Deep Research (`"path": "research"` in `submission.json`). SQL is one of the Researchers' tools; this is not a Text2SQL or evals project.
-- **Live site:** <YOUR CLOUD RUN URL>
+- **Live site:** <https://majorcompass.cloud.run/>
 - **Team:** <UNI 1>, <UNI 2>
 
 **Target users:** students, families and academic advisors choosing a major who want evidence (earnings, unemployment, whether graduates end up working in their field, how satisfied they are) instead of folklore. It can also build a shortlist from stated priorities, but it never declares a single "best" major.
