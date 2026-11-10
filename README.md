@@ -13,7 +13,7 @@ Five public sources, loaded by `build_data.py` into `data/majors.duckdb` (commit
 | Census ACS 2024 PUMS | Auto-downloaded: <https://www2.census.gov/programs-surveys/acs/data/pums/2024/1-Year/csv_pus.zip> | `major_outcomes`, `earnings_by_age`, `earnings_growth`, `major_occupations` |
 | BLS Employment Projections 2025-35 | Manual: <https://www.bls.gov/emp/ind-occ-matrix/occupation.xlsx> to `data/raw/bls_occupation.xlsx` | `occupation_outlook` |
 | College Scorecard, Field of Study | Manual: <https://collegescorecard.ed.gov/data/>, unzip into `data/raw/` | `scorecard_programs` |
-| FRED | Auto-downloaded: `https://fred.stlouisfed.org/graph/fredgraph.csv?id=<SERIES>` | `fred_series` |
+| FRED (Federal Reserve Bank of St. Louis) | Auto-downloaded as CSV: `https://fred.stlouisfed.org/graph/fredgraph.csv?id=<SERIES>`; local CSVs in `data/raw/` (any filename starting with the series ID) are used instead | `fred_series` |
 | NSF National Survey of College Graduates 2023 | Auto-downloaded: <https://ncses.nsf.gov/822/assets/0/files/college_grads_2023.zip> | `nscg_field_experience`, `nscg_group_experience`, `nscg_job_facets`, `nscg_outside_field_reasons`, `major_pay_vs_experience` |
 
 ```bash
