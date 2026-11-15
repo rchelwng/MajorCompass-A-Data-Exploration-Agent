@@ -211,6 +211,21 @@
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
+
+  /* citations, uncertainty, share */
+  .cite { white-space: nowrap; }
+  .cite button { font: inherit; font-size: .68em; font-weight: 700; color: var(--brand); background: var(--brand-soft); border: 1px solid transparent; border-radius: 6px; padding: 0 .35em; margin: 0 .1em; vertical-align: .25em; line-height: 1.5; transition: .15s; }
+  .cite button:hover { border-color: var(--brand); transform: translateY(-1px); }
+  .log .t.flash { background: var(--hl); outline: 2px solid var(--amber); border-radius: 6px; padding: .45rem .5rem; animation: fadein .4s ease both; }
+  .track { position: relative; }
+  .wh { position: absolute; top: 0; bottom: 0; border: 2px solid var(--ink); border-top: 0; border-bottom: 0; opacity: .75; animation: fadein 1s ease both; }
+  .wh::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--ink); }
+  .bars.u .bar { grid-template-columns: minmax(90px,170px) 1fr 70px 74px; }
+  .rel { font-size: .68rem; font-weight: 700; border-radius: 99px; padding: .05rem .45rem; text-align: center; white-space: nowrap; }
+  .rel.r2 { color: #0f9d74; background: rgba(15,157,116,.14); }
+  .rel.r1 { color: #b45309; background: rgba(245,158,11,.18); }
+  .rel.r0 { color: #c0262d; background: rgba(220,38,38,.14); }
+  @media (max-width: 720px) { .bars.u .bar { grid-template-columns: 80px 1fr 60px 64px; } }
 </style>
 </head>
 <body class="panel-closed">
@@ -221,6 +236,7 @@
   </div>
   <div class="spacer"></div>
   <button class="ghost" id="theme" aria-label="Switch theme" title="Switch theme">☾</button>
+  <button class="ghost" id="surprise" title="Hunt for a counterintuitive finding">✨ Surprise me</button>
   <button class="ghost" id="list-toggle" aria-expanded="false">Shortlist <b id="list-n">0</b></button>
   <button class="ghost" id="panel-toggle" aria-pressed="false" title="See the exact prompts every agent received, live">Agent timeline</button>
   <button class="ghost" id="reset">New chat</button>
@@ -323,7 +339,7 @@ function logBlock(calls) {
   s.textContent = "Show the work · " + calls.length + " tool calls by " + new Set(calls.map((c) => c.agent)).size + " agents";
   const box = document.createElement("div"); box.className = "log";
   for (const c of calls) {
-    const t = document.createElement("div"); t.className = "t";
+    const t = document.createElement("div"); t.className = "t"; t.dataset.n = box.children.length + 1;
     const w = document.createElement("span"); w.className = "who"; w.textContent = c.agent + "  ";
     const res = String(c.result);
     t.append(w, document.createTextNode(c.name + "(" + JSON.stringify(c.args) + ")\n→ " + (res.length > 1200 ? res.slice(0, 1200) + " …" : res)));
@@ -382,8 +398,9 @@ function renderAnswer(shell, data) {
   };
   const pdf = document.createElement("button"); pdf.textContent = "Save as PDF";
   pdf.onclick = () => { const row = shell.parentElement; row.classList.add("print-this"); window.print(); setTimeout(() => row.classList.remove("print-this"), 500); };
-  tools.append(copy, share, pdf); ex.appendChild(tools); shell.appendChild(ex);
-  typeInto(m, () => { ex.classList.add("show"); chartify(m); });
+  const card = document.createElement("button"); card.textContent = "Share card"; card.onclick = () => shareCard(m, data, card);
+  tools.append(copy, share, card, pdf); ex.appendChild(tools); shell.appendChild(ex);
+  typeInto(m, () => { ex.classList.add("show"); chartify(m); citeify(m, shell); });
 }
 
 // Live progress: which agents have started, read from the same /context timeline the panel draws.
@@ -436,7 +453,7 @@ async function send(text) {
     data = { response: "Could not reach the assistant. Check your connection and try again; if it keeps happening, ask a narrower question.", tool_calls: [] };
   }
   clearInterval(poll); stop(); showContext(runId);
-  renderAnswer(shell, data);
+  data.q = text; renderAnswer(shell, data);
   busy = false; sendBtn.disabled = false; input.focus(); scrollDown();
 }
 
@@ -469,26 +486,139 @@ function countUp(el, txt) {
     el.textContent = m[1] + v + m[3]; if (p < 1) requestAnimationFrame(f);
   })(t0);
 }
+// ---- click-to-prove citations ----
+const CITE = /\[(E\d+(?:\s*[,;]\s*E?\d+)*)\]/g;
+const clean = (s) => s.replace(/\s*\[E\d+(?:\s*[,;]\s*E?\d+)*\]/g, "");
+function openProof(shell, id) {
+  shell.querySelectorAll(".t.flash").forEach((x) => x.classList.remove("flash"));
+  const log = shell.querySelector("details.fold .log");
+  const t = log && log.querySelector('.t[data-n="' + id + '"]');
+  if (!t) { shell.querySelectorAll("details.fold").forEach((d) => (d.open = true)); return; }
+  log.closest("details").open = true;
+  t.classList.add("flash"); t.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+}
+function citeify(root, shell) {
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT), hits = []; let n;
+  while ((n = w.nextNode())) if (/\[E\d/.test(n.nodeValue) && !n.parentElement.closest(".bars,button,code")) hits.push(n);
+  for (const node of hits) {
+    const parts = node.nodeValue.split(CITE), frag = document.createDocumentFragment();
+    parts.forEach((p, i) => {
+      if (i % 2 === 0) { if (p) frag.append(p); return; }
+      const s = document.createElement("span"); s.className = "cite";
+      for (const id of p.match(/\d+/g)) {
+        const b = document.createElement("button"); b.textContent = "E" + id; b.title = "Show the tool call behind E" + id;
+        b.onclick = () => openProof(shell, id); s.appendChild(b);
+      }
+      frag.appendChild(s);
+    });
+    node.replaceWith(frag);
+  }
+}
+
+// ---- charts with uncertainty ----
 function chartify(root) {
   root.querySelectorAll("table").forEach((tb) => {
-    const heads = [...tb.querySelectorAll("th")].map((h) => h.textContent.trim());
-    const rows = [...tb.querySelectorAll("tbody tr")].map((r) => [...r.cells].map((c) => c.textContent.trim()));
+    const heads = [...tb.querySelectorAll("th")].map((h) => clean(h.textContent.trim()));
+    const rows = [...tb.querySelectorAll("tbody tr")].map((r) => [...r.cells].map((c) => clean(c.textContent.trim())));
     let col = -1;
     for (let j = 1; j < heads.length; j++) if (rows.filter((r) => isFinite(num(r[j] || ""))).length >= 3) { col = j; break; }
     if (col < 0) return;
-    const data = rows.filter((r) => isFinite(num(r[col] || ""))).slice(0, 8), max = Math.max(...data.map((r) => Math.abs(num(r[col]))));
-    const box = document.createElement("div"); box.className = "bars";
+    const moeCol = heads.findIndex((h, j) => j !== col && /margin|moe|±|std\.? ?err|conf/i.test(h));
+    const nCol = heads.findIndex((h, j) => j !== col && /^(n|sample( size)?|respondents|obs\w*)$/i.test(h));
+    const data = rows.filter((r) => isFinite(num(r[col] || ""))).slice(0, 8).map((r) => {
+      const v = Math.abs(num(r[col])), pm = r[col].match(/±\s*\$?([\d,.]+)(k)?/i);
+      const moe = pm ? num(pm[1] + (pm[2] || "")) : moeCol >= 0 ? Math.abs(num(r[moeCol] || "")) : NaN;
+      return { r, v, moe, n: nCol >= 0 ? num(r[nCol] || "") : NaN };
+    });
+    const rel = (d) => {
+      let s = null;
+      if (isFinite(d.moe) && d.v) { const q = d.moe / d.v; s = q < .08 ? 2 : q < .2 ? 1 : 0; }
+      if (isFinite(d.n)) { const k = d.n >= 1000 ? 2 : d.n >= 200 ? 1 : 0; s = s === null ? k : Math.min(s, k); }
+      return s;
+    };
+    const hasU = data.some((d) => rel(d) !== null);
+    const max = Math.max(...data.map((d) => d.v + (isFinite(d.moe) ? d.moe : 0)));
+    const box = document.createElement("div"); box.className = "bars" + (hasU ? " u" : "");
     const h = document.createElement("h4"); h.textContent = heads[col]; box.appendChild(h);
     const fills = [];
-    for (const r of data) {
-      const row = document.createElement("div"); row.className = "bar";
+    for (const d of data) {
+      const r = d.r, row = document.createElement("div"); row.className = "bar";
       const lab = document.createElement("button"); lab.className = "lab"; lab.textContent = r[0]; lab.title = "Save to shortlist";
       lab.setAttribute("aria-pressed", String(list.includes(r[0]))); lab.onclick = () => toggleMajor(r[0]);
       const tr = document.createElement("div"); tr.className = "track"; const f = document.createElement("div"); f.className = "fill"; tr.appendChild(f);
+      if (isFinite(d.moe)) {
+        const wh = document.createElement("div"); wh.className = "wh";
+        wh.style.left = Math.max(0, (d.v - d.moe) / max * 100) + "%"; wh.style.width = Math.min(100, 2 * d.moe / max * 100) + "%";
+        wh.title = "± " + d.moe.toLocaleString("en-US"); tr.appendChild(wh);
+      }
       const v = document.createElement("span"); v.className = "v"; countUp(v, r[col]);
-      row.append(lab, tr, v); box.appendChild(row); fills.push([f, Math.abs(num(r[col])) / max * 100]);
+      row.append(lab, tr, v);
+      if (hasU) {
+        const s = rel(d), b = document.createElement("span");
+        if (s !== null) {
+          b.className = "rel r" + s; b.textContent = ["Low", "Medium", "High"][s] + " conf.";
+          b.title = [isFinite(d.moe) ? "margin ± " + d.moe.toLocaleString("en-US") : "", isFinite(d.n) ? "n = " + d.n.toLocaleString("en-US") : ""].filter(Boolean).join(" · ");
+        }
+        row.appendChild(b);
+      }
+      box.appendChild(row); f.dataset.w = d.v / max * 100; fills.push([f, d.v / max * 100]);
     }
+    if (hasU) { const p = document.createElement("p"); p.className = "hint"; p.textContent = "Whisker = margin of error. Badge = reliability from margin size and sample size."; box.appendChild(p); }
     tb.before(box); requestAnimationFrame(() => requestAnimationFrame(() => fills.forEach(([f, w]) => (f.style.width = w + "%"))));
+  });
+}
+
+// ---- surprise me ----
+const SURPRISES = [
+  "Find the most counterintuitive finding in the data: a major whose pay, unemployment or satisfaction contradicts its reputation.",
+  "Which low-profile majors quietly out-earn famous ones, and how confident can we be?",
+  "Find a major where high pay comes with low satisfaction, or the reverse.",
+  "Which popular belief about majors and jobs does the data contradict most clearly?",
+];
+$("surprise").onclick = () => send(SURPRISES[Math.floor(Math.random() * SURPRISES.length)]);
+
+// ---- shareable result card ----
+function wrapText(x, text, px, y, w, lh, max) {
+  let line = "", n = 1;
+  for (const wd of text.split(/\s+/)) {
+    const t = line ? line + " " + wd : wd;
+    if (x.measureText(t).width > w && line) {
+      if (n >= max) { x.fillText(line.replace(/[.,;:]?$/, "…"), px, y); return y + lh; }
+      x.fillText(line, px, y); y += lh; n++; line = wd;
+    } else line = t;
+  }
+  x.fillText(line, px, y); return y + lh;
+}
+async function shareCard(m, data, btn) {
+  try { await document.fonts.ready; } catch {}
+  const dark = document.documentElement.dataset.theme === "dark";
+  const bg = dark ? "#0e1020" : "#f5f6fb", ink = dark ? "#eceefb" : "#14182b", mute = dark ? "#9aa1bf" : "#5b6177", brand = dark ? "#7c80ff" : "#3b3fd8";
+  const c = document.createElement("canvas"); c.width = 1200; c.height = 630;
+  const x = c.getContext("2d"), F = '"Plus Jakarta Sans", system-ui, sans-serif';
+  x.fillStyle = bg; x.fillRect(0, 0, 1200, 630);
+  const g = x.createLinearGradient(0, 0, 1200, 0); g.addColorStop(0, brand); g.addColorStop(1, "#f59e0b"); x.fillStyle = g; x.fillRect(0, 0, 1200, 10);
+  x.textBaseline = "top";
+  x.fillStyle = brand; x.font = "800 26px " + F; x.fillText("MajorCompass", 64, 44);
+  x.fillStyle = mute; x.font = "500 24px " + F; let y = wrapText(x, "“" + (data.q || "") + "”", 64, 96, 1070, 32, 2);
+  const bars = [...((m.querySelector(".bars") || document.createElement("div")).querySelectorAll(".bar"))].slice(0, 5);
+  const head = clean((m.querySelector("p") || m).textContent).trim();
+  x.fillStyle = ink; x.font = "800 38px " + F; y = wrapText(x, head, 64, y + 16, 1070, 50, bars.length ? 3 : 6);
+  y += 16;
+  for (const b of bars) {
+    x.fillStyle = ink; x.font = "600 21px " + F; x.fillText(b.querySelector(".lab").textContent.slice(0, 26), 64, y + 4);
+    x.fillStyle = dark ? "#2a2e4a" : "#e3e6f0"; x.fillRect(340, y + 8, 640, 14);
+    x.fillStyle = brand; x.fillRect(340, y + 8, 640 * (parseFloat(b.querySelector(".fill").dataset.w) || 0) / 100, 14);
+    x.fillStyle = ink; x.font = "700 21px " + F; x.fillText(b.querySelector(".v").textContent, 1000, y + 4);
+    y += 38;
+  }
+  x.fillStyle = mute; x.font = "500 17px " + F;
+  x.fillText("Census ACS · BLS · College Scorecard · FRED · NSF. Estimates describe groups, not you.", 64, 590);
+  c.toBlob(async (blob) => {
+    const file = new File([blob], "majorcompass.png", { type: "image/png" });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: "MajorCompass" });
+      else { const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "majorcompass.png"; a.click(); btn.textContent = "Saved"; setTimeout(() => (btn.textContent = "Share card"), 1500); }
+    } catch {}
   });
 }
 
