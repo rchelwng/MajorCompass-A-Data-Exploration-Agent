@@ -226,9 +226,15 @@
   .rel.r1 { color: #b45309; background: rgba(245,158,11,.18); }
   .rel.r0 { color: #c0262d; background: rgba(220,38,38,.14); }
   @media (max-width: 720px) { .bars.u .bar { grid-template-columns: 80px 1fr 60px 64px; } }
+
+  /* animated data background */
+  body::before, body::after { display: none; }
+  #bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+  @media print { #bg { display: none; } }
 </style>
 </head>
 <body class="panel-closed">
+<canvas id="bg" aria-hidden="true"></canvas>
 <header class="top"><div class="top-in">
   <div class="brand">
     <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3b3fd8"/><rect x="7" y="17" width="4" height="8" rx="1" fill="#fff"/><rect x="14" y="12" width="4" height="13" rx="1" fill="#fff"/><rect x="21" y="7" width="4" height="18" rx="1" fill="#f59e0b"/></svg>
@@ -654,6 +660,50 @@ $("theme").onclick = () => {
   document.documentElement.dataset.theme = t; try { localStorage.setItem("mc-theme", t); } catch {} paintTheme();
 };
 paintTheme();
+</script>
+<script>
+(() => {
+  const cv = document.getElementById("bg"), g = cv.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, brand, amber, ink, bars = [], glyphs = [];
+  const col = () => { const s = getComputedStyle(document.documentElement); brand = s.getPropertyValue("--brand").trim(); amber = s.getPropertyValue("--amber").trim(); ink = s.getPropertyValue("--ink").trim(); };
+  const size = () => {
+    const dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.max(14, Math.round(W / 46));
+    bars = Array.from({ length: n }, () => ({ ph: Math.random() * 6.28, sp: .25 + Math.random() * .5, h: .35 + Math.random() * .65, hot: Math.random() < .12 }));
+    glyphs = Array.from({ length: Math.round(W / 90) }, () => ({ x: Math.random() * W, y: Math.random() * H, s: 14 + Math.random() * 16, v: .15 + Math.random() * .3, c: "$%↗∑≈+".charAt(Math.floor(Math.random() * 6)) }));
+  };
+  const ly = (x, t) => H * .55 - (x / W) * H * .2 + Math.sin(x * .012 + t * .6) * 14 + Math.sin(x * .031 - t * .4) * 7;
+  const frame = (t) => {
+    g.clearRect(0, 0, W, H);
+    g.globalAlpha = .06; g.fillStyle = ink;
+    for (let y = 64; y < H; y += 64) g.fillRect(0, y, W, 1);
+    const bw = W / bars.length;
+    bars.forEach((b, i) => {
+      const h = H * .38 * b.h * (.75 + .25 * Math.sin(t * b.sp + b.ph)), x = i * bw + bw * .18, w = bw * .64;
+      g.fillStyle = b.hot ? amber : brand;
+      g.globalAlpha = b.hot ? .2 : .11; g.fillRect(x, H - h, w, h);
+      g.globalAlpha = b.hot ? .5 : .3; g.fillRect(x, H - h, w, 3);
+    });
+    g.globalAlpha = .45; g.strokeStyle = amber; g.lineWidth = 2; g.beginPath();
+    for (let x = 0; x <= W; x += 6) x ? g.lineTo(x, ly(x, t)) : g.moveTo(x, ly(x, t));
+    g.stroke();
+    const dx = reduce ? W * .7 : (t * 70) % (W + 80) - 40, dy = ly(dx, t);
+    g.globalAlpha = .18; g.fillStyle = amber; g.beginPath(); g.arc(dx, dy, 14, 0, 6.28); g.fill();
+    g.globalAlpha = .9; g.beginPath(); g.arc(dx, dy, 4, 0, 6.28); g.fill();
+    g.fillStyle = ink; g.globalAlpha = .12; g.textAlign = "center";
+    for (const o of glyphs) {
+      if (!reduce) { o.y -= o.v; if (o.y < -30) { o.y = H + 30; o.x = Math.random() * W; } }
+      g.font = '700 ' + o.s + 'px "Plus Jakarta Sans", system-ui, sans-serif'; g.fillText(o.c, o.x, o.y);
+    }
+    g.globalAlpha = 1;
+  };
+  col(); size(); frame(0);
+  addEventListener("resize", () => { size(); frame(0); });
+  new MutationObserver(() => { col(); if (reduce) frame(0); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  if (!reduce) { const loop = (ms) => { frame(ms / 1000); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+})();
 </script>
 </body>
 </html>
